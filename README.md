@@ -2,6 +2,12 @@
 
 Please ensure you obtain an API key from [https://www.pexels.com/api/](https://www.pexels.com/api/) and provide the API key in your .env.local file as the value for your environment variable (NEXT_PUBLIC_PEXELS_API_KEY)
 
+## LOGIN
+
+To access the drag and drop feature make use of the following details:
+username: kk@gmail.com
+password: hellooo
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
