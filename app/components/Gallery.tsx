@@ -1,5 +1,6 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
 import type { ImageResults } from "@/models/Images";
 import fetchImages from "../lib/fetchImages";
 import ImageCard from "./ImageCard";
@@ -7,6 +8,7 @@ import getPages from "../lib/getPages";
 import Footer from "./Footer";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useState, useEffect } from "react";
+import { useAuthContext } from "../context/AuthContext";
 
 type Props = {
   topic?: string | undefined;
@@ -15,6 +17,7 @@ type Props = {
 
 export default function Gallery({ topic = "curated", page }: Props) {
   const [image, setImage] = useState<ImageResults>();
+  const { state } = useAuthContext();
   let url = "";
   if (topic === "curated" && page) {
     // browsing beyond home
@@ -70,7 +73,16 @@ export default function Gallery({ topic = "curated", page }: Props) {
 
   return (
     <>
-      <div className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
+      <div className="max-w-2xl mx-auto py-8 px-4 sm:py-8 sm:px-6 lg:max-w-7xl lg:px-8">
+        {!state.user.is_authenticated ? (
+          <div className="mb-8 py-4 px-2 bg-slate-100 border-2 border-slate-600 border-dotted rounded-xl">
+            <Link href="/login" className="underline ">
+              Log in
+            </Link>{" "}
+            to drag and drop images to reorder them.
+          </div>
+        ) : null}
+
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="droppable">
             {(droppableProvided) => (
@@ -82,12 +94,14 @@ export default function Gallery({ topic = "curated", page }: Props) {
                 <div className="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
                   {/* Images will go here */}
                   {image.photos.map((photo, index) => {
-                    console.log(photo.id);
                     return (
                       <Draggable
                         key={index}
                         draggableId={index.toString()}
                         index={index}
+                        isDragDisabled={
+                          state.user.is_authenticated ? false : true
+                        }
                       >
                         {(provided) => (
                           <div

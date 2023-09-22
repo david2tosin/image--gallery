@@ -7,6 +7,7 @@ import { loginWithEmailAndPassword } from "@/app/backend";
 import { useAuthContext } from "../context/AuthContext";
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const validationSchema = z.object({
   email: z.string().min(3, { message: "Email is required" }).nonempty(),
@@ -19,6 +20,7 @@ type ValidationSchema = z.infer<typeof validationSchema>;
 
 const SignInPage = () => {
   const { dispatch } = useAuthContext();
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -33,9 +35,9 @@ const SignInPage = () => {
     setLoading(true);
 
     try {
-      const res = await loginWithEmailAndPassword(data);
-      console.log(res);
-      // dispatch({ type: "LOGIN", payload: res.data });
+      await loginWithEmailAndPassword(data);
+      dispatch({ type: "LOGIN" });
+      router.push("/");
     } catch (error) {
       setError((error as Error).message || "An error occurred");
     } finally {
@@ -95,10 +97,14 @@ const SignInPage = () => {
 
           <div className="mt-8 flex justify-center">
             <button
-              className="w-full rounded-3xl bg-slate-700 p-4 font-semibold text-white"
+              className="w-full flex justify-center items-center rounded-3xl bg-slate-700 p-4 font-semibold text-white"
               type="submit"
             >
-              {loading ? "Loading..." : "Sign in"}
+              {loading ? (
+                <div className="h-4 w-4 animate-spinner rounded-full border border-t border-t-slate-800 ease-linear"></div>
+              ) : (
+                "Sign in"
+              )}
             </button>
           </div>
           <p className="mt-2 text-center text-red-500">{error}</p>

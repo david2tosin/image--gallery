@@ -28,8 +28,9 @@ export default function ImageCard({ photo }: Props) {
           onLoadingComplete={(img) => setLoading(false)}
         />
       </div>
-      <h3 className="mt-4 text-sm text-gray-700">{photo.photographer}</h3>
-      <p className="mt-1 text-lg font-medium text-gray-900">@leeerob</p>
+      <h3 className="mt-4 text-lg font-medium text-gray-900">
+        {photo.photographer}
+      </h3>
     </a>
   );
 }

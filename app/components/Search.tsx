@@ -8,13 +8,17 @@ import { useAuthContext } from "../context/AuthContext";
 export default function Search() {
   const [search, setSearch] = useState("");
   const router = useRouter();
-  const { state } = useAuthContext();
+  const { state, dispatch } = useAuthContext();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     router.push(`/results/${search}`);
     setSearch("");
   };
+
+  function logoutUser() {
+    dispatch({ type: "LOGOUT" });
+  }
 
   return (
     <div className="flex items-center gap-2">
@@ -31,7 +35,9 @@ export default function Search() {
         />
       </form>
       {state.user.is_authenticated ? (
-        <div>Welcome</div>
+        <button type="button" onClick={logoutUser}>
+          Log out
+        </button>
       ) : (
         <Link
           href="/login"
